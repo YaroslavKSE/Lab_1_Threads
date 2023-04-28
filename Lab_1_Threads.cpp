@@ -2,10 +2,39 @@
 //
 
 #include <iostream>
+#include <chrono>
+using namespace std;
+
+int simpleLoop(int numberOfTicks) {
+    int var = 0;
+    for (int i = 0; i < numberOfTicks; i++) {
+        var += i;
+        
+    }
+    return var;
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
+    auto t1 = high_resolution_clock::now();
+    int result = simpleLoop(200);
+    auto t2 = high_resolution_clock::now();
+
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(t2 - t1);
+
+    /* Getting number of milliseconds as a double. */
+    duration<double, std::milli> ms_double = t2 - t1;
+
+    std::cout << ms_int.count() << "ms\n";
+    std::cout << ms_double.count() << "ms\n";
+    cout << result << endl;
+    return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
