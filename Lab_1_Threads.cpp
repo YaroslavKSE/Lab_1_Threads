@@ -1,17 +1,45 @@
-// Lab_1_Threads.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <chrono>
 using namespace std;
+const int matrixSize = 3;
 
-int simpleLoop(int numberOfTicks) {
-    int var = 0;
-    for (int i = 0; i < numberOfTicks; i++) {
-        var += i;
-        
+int** fillMatrix() {
+    int** matrix = new int* [matrixSize];
+
+    // Providing a seed value
+    srand((unsigned)time(NULL));
+
+
+    for (int i = 0; i < matrixSize; i++)
+    {
+        matrix[i] = new int[matrixSize];
+        for (int j = 0; j < matrixSize; j++)
+        {
+            matrix[i][j] = rand() % 10;
+        }
     }
-    return var;
+    return matrix;
+}
+
+int** rebuildMatrix(int** matrix) {
+    for (int i = 0; i < matrixSize; i++) {
+        int sum = 0;
+        for (int j = 0; j < matrixSize; j++) {
+            sum += matrix[j][i];
+        }
+        matrix[i][i] = sum;
+    }
+    return matrix;
+}
+
+void printMatrix(int** matrix)
+{
+    for (int i = 0; i < matrixSize; ++i) {
+        for (int j = 0; j < matrixSize; ++j) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
+    }
 }
 
 int main()
@@ -22,7 +50,12 @@ int main()
     using std::chrono::milliseconds;
 
     auto t1 = high_resolution_clock::now();
-    int result = simpleLoop(200);
+    cout << "Base Matrix" << "\n";
+    int** matrix = fillMatrix();
+    printMatrix(matrix);
+    cout << "Rebuilded Matrix" << "\n";
+    int** rebuildedMatrix = rebuildMatrix(matrix);
+    printMatrix(rebuildedMatrix);
     auto t2 = high_resolution_clock::now();
 
     /* Getting number of milliseconds as an integer. */
@@ -33,17 +66,9 @@ int main()
 
     std::cout << ms_int.count() << "ms\n";
     std::cout << ms_double.count() << "ms\n";
-    cout << result << endl;
+
     return 0;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+// Fill the square matrix with random numbers. On the main diagonal, place the sums of the elements that lie in the same column.
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
