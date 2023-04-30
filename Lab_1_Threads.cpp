@@ -1,19 +1,20 @@
 #include <iostream>
 #include <chrono>
+#include <thread>
+
 using namespace std;
-const int matrixSize = 3;
+const int matrixsize = 3;
 
-int** fillMatrix() {
-    int** matrix = new int* [matrixSize];
+int** fillmatrix() {
+    int** matrix = new int* [matrixsize];
 
-    // Providing a seed value
+    // providing a seed value
     srand((unsigned)time(NULL));
 
-
-    for (int i = 0; i < matrixSize; i++)
+    for (int i = 0; i < matrixsize; i++)
     {
-        matrix[i] = new int[matrixSize];
-        for (int j = 0; j < matrixSize; j++)
+        matrix[i] = new int[matrixsize];
+        for (int j = 0; j < matrixsize; j++)
         {
             matrix[i][j] = rand() % 10;
         }
@@ -21,10 +22,10 @@ int** fillMatrix() {
     return matrix;
 }
 
-int** rebuildMatrix(int** matrix) {
-    for (int i = 0; i < matrixSize; i++) {
+int** rebuildmatrix(int** matrix) {
+    for (int i = 0; i < matrixsize; i++) {
         int sum = 0;
-        for (int j = 0; j < matrixSize; j++) {
+        for (int j = 0; j < matrixsize; j++) {
             sum += matrix[j][i];
         }
         matrix[i][i] = sum;
@@ -32,10 +33,10 @@ int** rebuildMatrix(int** matrix) {
     return matrix;
 }
 
-void printMatrix(int** matrix)
+void printmatrix(int** matrix)
 {
-    for (int i = 0; i < matrixSize; ++i) {
-        for (int j = 0; j < matrixSize; ++j) {
+    for (int i = 0; i < matrixsize; ++i) {
+        for (int j = 0; j < matrixsize; ++j) {
             cout << matrix[i][j] << " ";
         }
         cout << endl;
@@ -50,18 +51,18 @@ int main()
     using std::chrono::milliseconds;
 
     auto t1 = high_resolution_clock::now();
-    cout << "Base Matrix" << "\n";
-    int** matrix = fillMatrix();
-    printMatrix(matrix);
-    cout << "Rebuilded Matrix" << "\n";
-    int** rebuildedMatrix = rebuildMatrix(matrix);
-    printMatrix(rebuildedMatrix);
+    cout << "base matrix" << "\n";
+    int** matrix = fillmatrix();
+    printmatrix(matrix);
+    cout << "rebuilded matrix" << "\n";
+    int** rebuildedmatrix = rebuildmatrix(matrix);
+    printmatrix(rebuildedmatrix);
     auto t2 = high_resolution_clock::now();
 
-    /* Getting number of milliseconds as an integer. */
+    /* getting number of milliseconds as an integer. */
     auto ms_int = duration_cast<milliseconds>(t2 - t1);
 
-    /* Getting number of milliseconds as a double. */
+    /* getting number of milliseconds as a double. */
     duration<double, std::milli> ms_double = t2 - t1;
 
     std::cout << ms_int.count() << "ms\n";
@@ -70,5 +71,24 @@ int main()
     return 0;
 }
 
-// Fill the square matrix with random numbers. On the main diagonal, place the sums of the elements that lie in the same column.
+//void compute(const std::size_t thread_id, const std::size_t message_count)
+//{
+//	for (std::size_t index = 0; index < message_count; index++) {
+//		std::printf("Thread with ID [%llu] started.", thread_id);
+//	}
+//}
+//int main()
+//{
+//	const std::size_t thread_id = 13;
+//	const std::size_t message_count = 100;
+//	std::thread thread = std::thread(compute, thread_id, message_count);
+//	thread.join();
+//
+//	return 0;
+//}
+
+
+// Fill the square matrix with random numbers. on the main diagonal, place the sums of the elements that lie in the same column.
+
+
 
