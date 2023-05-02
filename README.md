@@ -10,7 +10,8 @@ The efficiency of performing parallel calculations on a PC is affected by severa
 > Memory bandwidth is the rate at which data can be transferred between the CPU and RAM. A higher memory bandwidth allows for faster data transfer, which can improve parallel processing performance.
 ### 5. Cache size
 > The cache is a small amount of memory that is built into the CPU to hold frequently accessed data. A larger cache size can improve parallel processing performance by reducing the need for the CPU to access main memory.
-##PC characteristics
+
+## PC characteristics
 1. CPU: AMD Ryzen 5 3600
 2. Processor cores: 6 cores and 12 processing threads
 3. Clock speed: Base Clock Speed **3.6 GHz** Maximum Boost Speed 4.2 GHz
