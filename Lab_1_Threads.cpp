@@ -2,13 +2,13 @@
 #include <chrono>
 #include <thread>
 #include <vector>
+#include <cstdlib>
+
 // Fill the square matrix with random numbers. on the main diagonal, place the sums of the elements that lie in the same column.
 
 using namespace std;
-const int matrixsize = 3000;
-const int threadsNum = 2;
 
-int** fillmatrix() {
+int** fillmatrix(const int matrixsize) {
     int** matrix = new int* [matrixsize];
 
     // providing a seed value
@@ -25,7 +25,7 @@ int** fillmatrix() {
     return matrix;
 }
 
-int** rebuildmatrix(int** matrix) {
+int** rebuildmatrix(int** matrix, const int matrixsize) {
     for (int i = 0; i < matrixsize; i++) {
         int sum = 0;
         for (int j = 0; j < matrixsize; j++) {
@@ -36,7 +36,7 @@ int** rebuildmatrix(int** matrix) {
     return matrix;
 }
 
-void rebuildMatrixThread(int** matrix, int start, int end) {
+void rebuildMatrixThread(int** matrix, const int matrixsize, int start, int end) {
     for (int i = start; i < end; i++) {
         int sum = 0;
         for (int j = 0; j < matrixsize; j++) {
@@ -46,7 +46,7 @@ void rebuildMatrixThread(int** matrix, int start, int end) {
     }
 }
 
-void printmatrix(int** matrix)
+void printmatrix(int** matrix, int matrixsize)
 {
     for (int i = 0; i < matrixsize; ++i) {
         for (int j = 0; j < matrixsize; ++j) {
@@ -56,21 +56,28 @@ void printmatrix(int** matrix)
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    if (argc < 2) {
+        cout << "You should provide two arguments (matrix size and threads number)" << "\n";
+    }
+    const int matrixSize = atoi(argv[1]);
+    const int threadsNum = atoi(argv[2]);
+    cout << "Matrix Size: " << matrixSize << " Threads Num: " << threadsNum << "\n";
+
     using std::chrono::high_resolution_clock;
     using std::chrono::duration_cast;
     using std::chrono::duration;
     using std::chrono::milliseconds;
 
     cout << "Base matrix" << "\n";
-    int** matrix = fillmatrix();
+    int** matrix = fillmatrix(matrixSize);
     //printmatrix(matrix);
 
     // rebuild without threads
     cout << "rebuilded matrix" << "\n";
     auto t1 = high_resolution_clock::now();
-    int** rebuildedmatrix = rebuildmatrix(matrix);
+    int** rebuildedmatrix = rebuildmatrix(matrix, matrixSize);
     auto t2 = high_resolution_clock::now();
     //printmatrix(rebuildedmatrix);
 
@@ -84,14 +91,14 @@ int main()
     // create threads
     auto t3 = high_resolution_clock::now();
     vector<thread> threads;
-    int blockSize = matrixsize / threadsNum;
+    int blockSize = matrixSize / threadsNum;
     for (int i = 0; i < threadsNum; i++) {
         int start = i * blockSize;
         int end = (i + 1) * blockSize;
         if (i == threadsNum - 1) {
-            end = matrixsize;
+            end = matrixSize;
         }
-        threads.emplace_back(rebuildMatrixThread, matrix, start, end);
+        threads.emplace_back(rebuildMatrixThread, matrix, matrixSize, start, end);
     }
    
     // wait for all threads to finish
@@ -110,71 +117,3 @@ int main()
 
     return 0;
 }
-
-//#include <iostream>
-//#include <thread>
-//#include <vector>
-//using namespace std;
-//
-//const int THREAD_NUM = 1;
-//const int ARRAY_SIZE = 10000;
-//
-//void func(const vector<int>& input, int thread_index, int thread_number, vector<int>& output)
-//{
-//    // Each thread calculates sum of different elemets and puts the result to an intermediate storage
-//    for (size_t i = thread_index; i < input.size(); i += thread_number)
-//    {
-//        output[thread_index] += input[i];
-//    }
-//}
-//
-//int main()
-//{
-//    using std::chrono::high_resolution_clock;
-//    using std::chrono::duration_cast;
-//    using std::chrono::duration;
-//    using std::chrono::milliseconds;
-//
-//    vector<int> v;
-//    // Put random values inside the vector
-//    for (int i = 0; i < ARRAY_SIZE; i++)
-//    {
-//        v.push_back(rand() % 100);
-//    }
-//
-//    // Fill the output array with zeroes to calculate each thread's sum inside
-//    vector<int> answers(THREAD_NUM, 0);
-//     
-//    auto t1 = high_resolution_clock::now();
-//
-//    // Start threads
-//    thread threads[THREAD_NUM];
-//    for (int i = 0; i < THREAD_NUM; i++)
-//    {
-//        threads[i] = thread(func, v, i, THREAD_NUM, std::ref(answers));
-//    }
-//
-//    // Wait for threads completion
-//    for (int i = 0; i < THREAD_NUM; i++)
-//    {
-//        threads[i].join();
-//    }
-//
-//    // Calculate the final answer in the main thread
-//    int final_answer = 0;
-//    for (int i = 0; i < THREAD_NUM; i++)
-//    {
-//        final_answer += answers[i];
-//    }
-//    auto t2 = high_resolution_clock::now();
-//    // mesuaring time with threads
-//    auto ms_int2 = duration_cast<milliseconds>(t2 - t1);
-//    duration<double, std::milli> ms_double2 = t2 - t1;
-//
-//    std::cout << ms_int2.count() << "ms\n";
-//    std::cout << ms_double2.count() << "ms\n";
-//
-//    cout << "Final sum = " << final_answer << endl;
-//
-//    return 0;
-//}
