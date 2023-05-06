@@ -20,3 +20,6 @@ The efficiency of performing parallel calculations on a PC is affected by severa
 > All test will be performed using G.Skill TridentZ NEO DDR4 RAM 2x16 GBs each. **Default XMP 2.0 enabled at 3600 MHz**
 5. Cache size: L3 Cache	32 MB 
 > Cache L1:	64K (per core) Cache L2: 512K (per core)
+
+## Test results graph
+![image](https://user-images.githubusercontent.com/94047397/236637755-ddab56bc-fd09-4a91-96a6-d481e6668d73.png)
